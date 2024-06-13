@@ -31,7 +31,7 @@ pipeline {
             steps{
                 sh '''
                     sam build
-                    sam deploy --config-file samconfig.toml --config-env stagingd  
+                    sam deploy --config-file samconfig.toml --config-env staging  
                 '''
             }
         }
