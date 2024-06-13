@@ -21,6 +21,7 @@ image_repositories = []
 resolve_s3 = true
 confirm_changeset = true
 
+
 [production]
 [production.deploy]
 [production.deploy.parameters]
