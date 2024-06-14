@@ -37,7 +37,7 @@ class TestApi(unittest.TestCase):
             response.status_code, 200, "Error en la petición API a {url}"
         )
         self.assertEqual(
-            jsonbody['text'], "Integrationnnnnn text example", "Error en la petición API a {url}"
+            jsonbody['text'], "Integration text example", "Error en la petición API a {url}"
         )
         #List
         url = BASE_URL+"/todos"
