@@ -1,0 +1,1 @@
+Este fichero ha sido creado para verificar que el mergeo de develop a master funciona.
