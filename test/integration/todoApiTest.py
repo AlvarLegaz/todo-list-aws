@@ -7,6 +7,7 @@ import json
 
 import pytest
 
+#Use environ.get if you want to use a defaul where defaul is /home/username
 BASE_URL = os.environ.get("BASE_URL")
 #BASE_URL = "https://quw57ceol2.execute-api.us-east-1.amazonaws.com/Prod"
 DEFAULT_TIMEOUT = 2  # in secs
