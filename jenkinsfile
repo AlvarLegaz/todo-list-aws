@@ -11,18 +11,7 @@ pipeline {
                 whoami
                 pwd
                 '''
-                git branch: 'develop', credentialsId: 'Github_user_AlvarLegaz_token_as_pass', url: 'https://github.com/AlvarLegaz/todo-list-aws.git'
-            }
-        }
-        
-        stage('Static Tests'){
-            steps {
-                sh '''
-                    flake8 --exit-zero --format=pylint --max-line-length 40 src > flake8.out
-                    bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
-                '''
-                recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], qualityGates: [[threshold: 1000, type: 'TOTAL', unstable: true], [threshold: 2000, type: 'TOTAL', unstable: false]]
-                recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')], qualityGates: [[threshold: 2000, type: 'TOTAL', unstable: true], [threshold: 4000, type: 'TOTAL', unstable: false]]
+                git branch: 'master', credentialsId: 'Github_user_AlvarLegaz_token_as_pass', url: 'https://github.com/AlvarLegaz/todo-list-aws.git'
             }
         }
         
@@ -30,8 +19,8 @@ pipeline {
             steps{
                 sh '''
                     sam build
-                    sam deploy --config-file samconfig.toml --config-env staging --no-fail-on-empty-changeset
-                    sam list stack-outputs --output json --stack-name staging-todo-list-aws --region us-east-1
+                    sam deploy --config-file samconfig.toml --config-env prod --no-fail-on-empty-changeset
+                    sam list stack-outputs --output json --stack-name prod-todo-list-aws --region us-east-1
                 '''
             }
         }
@@ -44,22 +33,8 @@ pipeline {
                 junit 'result*.xml'
             }   
         }
-        
-        stage('Promote'){
-            steps{
-                withCredentials([usernamePassword(credentialsId: 'Github_user_AlvarLegaz_token_as_pass', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]){
-                    sh '''
-                        git checkout master
-                        git pull origin master
-                        git merge develop -m "Promote to release"
-                        git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/AlvarLegaz/todo-list-aws.git
-                        git push origin master
-                    '''
-                }
-            }
-        }
     }
-    
+
     post {
         always {
             cleanWs()
