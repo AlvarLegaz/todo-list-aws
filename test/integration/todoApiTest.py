@@ -15,8 +15,6 @@ DEFAULT_TIMEOUT = 2  # in secs
 
 @pytest.mark.api
 class TestApi(unittest.TestCase):
-
-    self.
     
     def setUp(self):
         self.assertIsNotNone(BASE_URL, "URL no configurada")
