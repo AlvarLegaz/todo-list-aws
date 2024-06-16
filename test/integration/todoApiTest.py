@@ -23,6 +23,23 @@ class TestApi(unittest.TestCase):
     def test_api_listtodos(self):
         print('---------------------------------------')
         print('Starting - integration test List TODO')
+        #Add TODO
+        url = BASE_URL+"/todos"
+        data = {
+         "text": "Aprender git y aws"
+        }
+        response = requests.post(url, data=json.dumps(data))
+        json_response = response.json()
+        print('Response Add Todo: '+ str(json_response))
+        jsonbody= json.loads(json_response['body'])
+        self.ID_TODO = jsonbody['id']
+        print ('ID todo:'+ID_TODO)
+        self.assertEqual(
+            response.status_code, 200, "Error en la petición API a {url}"
+        )
+        self.assertEqual(
+            jsonbody['text'], "Aprender git y aws", "Error en la petición API a {url}"
+        )
         #List
         url = BASE_URL+"/todos"
         response = requests.get(url)
@@ -38,8 +55,7 @@ class TestApi(unittest.TestCase):
         print('---------------------------------------')
         print('Starting - integration test Get TODO')
         #Test GET TODO
-        ID_TODO = "eb2450fd-2c03-11ef-a81e-c9cc90002600"
-        url = BASE_URL+"/todos/"+ID_TODO
+        url = BASE_URL+"/todos/"+self.ID_TODO
         response = requests.get(url)
         json_response = response.json()
         print('Response Get Todo: '+ str(json_response))
