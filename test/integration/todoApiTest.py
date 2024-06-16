@@ -11,6 +11,8 @@ import pytest
 BASE_URL = os.environ.get("BASE_URL_PROD")
 DEFAULT_TIMEOUT = 2  # in secs
 
+#Prod database has the following entry: [{"checked": false, "createdAt": "1718558081.332397", "text": "Aprender git y aws", "id": "eb2450fd-2c03-11ef-a81e-c9cc90002600", "updatedAt": "1718558081.332397"}]
+
 @pytest.mark.api
 class TestApi(unittest.TestCase):
     
@@ -45,7 +47,7 @@ class TestApi(unittest.TestCase):
             response.status_code, 200, "Error en la petición API a {url}"
         )
         self.assertEqual(
-            json_response['text'], "Integration text example - GET", "Error en la petición API a {url}"
+            json_response['text'], "Aprender git y aws", "Error en la petición API a {url}"
         )
         #Delete TODO to restore state
         response = requests.delete(url)
