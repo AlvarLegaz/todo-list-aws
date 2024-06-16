@@ -36,7 +36,7 @@ class TestApi(unittest.TestCase):
         print('---------------------------------------')
         print('Starting - integration test Get TODO')
         #Test GET TODO
-        ID_TODO = eb2450fd-2c03-11ef-a81e-c9cc90002600
+        ID_TODO = "eb2450fd-2c03-11ef-a81e-c9cc90002600"
         url = BASE_URL+"/todos/"+ID_TODO
         response = requests.get(url)
         json_response = response.json()
