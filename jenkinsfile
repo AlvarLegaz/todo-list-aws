@@ -19,8 +19,8 @@ pipeline {
             steps{
                 sh '''
                     sam build
-                    sam deploy --config-file samconfig.toml --config-env prod --no-fail-on-empty-changeset
-                    sam list stack-outputs --output json --stack-name prod-todo-list-aws --region us-east-1
+                    sam deploy --config-file samconfig.toml --config-env production --no-fail-on-empty-changeset
+                    sam list stack-outputs --output json --stack-name todo-list-aws-production --region us-east-1
                 '''
             }
         }
