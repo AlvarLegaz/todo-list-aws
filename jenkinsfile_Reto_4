@@ -1,0 +1,96 @@
+pipeline {
+    agent any
+
+    stages{
+        
+        stage('CI: Get Code') {
+            steps {
+                
+                sh'''
+                uname
+                whoami
+                pwd
+                '''
+                
+                git branch: 'develop', credentialsId: 'Github_user_AlvarLegaz_token_as_pass', url: 'https://github.com/AlvarLegaz/todo-list-aws.git'
+                
+                sh'''
+                    ls 
+                    rm -v samconfig.toml
+                    ls
+                    wget https://raw.githubusercontent.com/AlvarLegaz/todo-list-aws-config-repo/staging/samconfig.toml
+                '''
+               
+            }
+        }
+        
+        stage('CI: SAM-Deploy'){
+            steps{
+                sh '''
+                    sam build
+                    sam deploy --config-file samconfig.toml --config-env staging --no-fail-on-empty-changeset
+                    sam list stack-outputs --output json --stack-name staging-todo-list-aws --region us-east-1
+                '''
+            }
+        }
+        
+        stage('CI: Rest Test'){
+            steps{
+                sh '''
+                pytest --junitxml=result-rest-staging.xml test/integration/todoApiTest.py
+                '''
+                junit 'result*.xml'
+            }   
+        }
+        
+        stage('CI: Clean enviroment'){
+            steps{
+                cleanWs()
+            }
+        }
+
+        stage('CD: Get Code') {
+            steps {
+                sh'''
+                    uname
+                    whoami
+                    pwd
+                '''
+                    
+                git branch: 'master', credentialsId: 'Github_user_AlvarLegaz_token_as_pass', url: 'https://github.com/AlvarLegaz/todo-list-aws.git'
+                    
+                sh'''
+                    ls 
+                    rm -v samconfig.toml
+                    ls
+                    wget https://raw.githubusercontent.com/AlvarLegaz/todo-list-aws-config-repo/production/samconfig.toml
+                '''
+            }
+        }
+        
+        stage('CD: SAM-Deploy'){
+            steps{
+                sh '''
+                    sam build
+                    sam deploy --config-file samconfig.toml --config-env production --no-fail-on-empty-changeset
+                    sam list stack-outputs --output json --stack-name todo-list-aws-production --region us-east-1
+                '''
+            }
+        }
+        
+        stage('CD: Rest Test'){
+            steps{
+                sh '''
+                pytest --junitxml=result-rest-prod.xml test/integration/todoApiTest.py
+                '''
+                junit 'result*.xml'
+            }   
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
