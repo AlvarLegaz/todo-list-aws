@@ -67,9 +67,10 @@ pipeline {
             }
         }
     }
+
     post {
-        agent {label 'agente1'}
         always {
+            agent {label 'agente1'}
             cleanWs()
         }
     }
