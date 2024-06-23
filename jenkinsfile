@@ -2,6 +2,7 @@ pipeline {
     agent any
     stages {
         stage('Get Code') {
+            agent {label 'agente1'}
             steps {                
                 sh'''
                 uname
