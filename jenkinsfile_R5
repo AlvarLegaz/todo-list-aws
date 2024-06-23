@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+    stages {
+        stage('Get Code') {
+            agent {label 'agente1'}
+            steps {                
+                sh'''
+                uname
+                whoami
+                pwd
+                '''
+                git branch: 'develop', credentialsId: 'Github_user_AlvarLegaz_token_as_pass', url: 'https://github.com/AlvarLegaz/todo-list-aws.git'
+            }
+        }
+        
+        stage('Static Tests'){
+            agent {label 'agente1'}
+            steps {
+                sh '''
+                    flake8 --exit-zero --format=pylint --max-line-length 40 src > flake8.out
+                    bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
+                '''
+                recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], qualityGates: [[threshold: 1000, type: 'TOTAL', unstable: true], [threshold: 2000, type: 'TOTAL', unstable: false]]
+                recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')], qualityGates: [[threshold: 2000, type: 'TOTAL', unstable: true], [threshold: 4000, type: 'TOTAL', unstable: false]]
+            }
+        }
+        
+        stage('SAM-Deploy'){
+            agent {label 'agente1'}
+            steps{
+                sh '''
+                    sam build
+                    sam deploy --config-file samconfig.toml --config-env staging --no-fail-on-empty-changeset
+                    sam list stack-outputs --output json --stack-name staging-todo-list-aws --region us-east-1
+                '''
+            }
+        }
+        
+        stage('Rest Test'){
+            agent {label 'agente1'}
+            steps{
+                sh '''
+                pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
+                '''
+                junit 'result*.xml'
+            }   
+        }
+    }
+}
