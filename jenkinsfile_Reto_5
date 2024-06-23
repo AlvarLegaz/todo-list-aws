@@ -45,11 +45,7 @@ pipeline {
                 junit 'result*.xml'
             }   
         }
-        stage('Post- Clean workspace'){
-            agent {label 'agente1'}
-            steps{
-                cleanWs()
-            }
-        }
+
+
     }
 }
