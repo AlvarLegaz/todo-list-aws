@@ -55,6 +55,7 @@ pipeline {
                     sh '''
                         git checkout develop
                         git branch
+                        git checkout -b master
                     '''
                 }
             }
