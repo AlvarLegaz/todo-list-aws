@@ -54,8 +54,8 @@ pipeline {
                         git checkout develop
                         git branch
                         git checkout -b master
-                        git add ./src/.
-                        git add ./check_merge_to_master.txt
+                        git add src/.
+                        git add check_merge_to_master.txt
                         git commit -m "Promote to release"
                         git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/AlvarLegaz/todo-list-aws.git
                         git push origin master
