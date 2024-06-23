@@ -49,16 +49,18 @@ pipeline {
         stage('Promote to production'){
             agent {label 'agente1'}
             steps{
-                sh '''
-                    git checkout -b master origin/master
-                    git branch
-                    git checkout develop -- check_merge_to_master.txt
-                    git checkout develop -- src/.
-                    git commit -m "Promote to master"
-                    git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/AlvarLegaz/todo-list-aws.git
-                    git push origin master
-                '''
-                cleanWs()
+                withCredentials([usernamePassword(credentialsId: 'Github_user_AlvarLegaz_token_as_pass', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]){
+                    sh '''
+                        git checkout -b master origin/master
+                        git branch
+                        git checkout develop -- check_merge_to_master.txt
+                        git checkout develop -- src/.
+                        git commit -m "Promote to master"
+                        git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/AlvarLegaz/todo-list-aws.git
+                        git push origin master
+                    '''
+                    cleanWs()
+                }
             }
         }
     }
