@@ -1,0 +1,40 @@
+    stages {
+        
+        stage('Get Code') {
+            steps {
+                
+                sh'''
+                uname
+                whoami
+                pwd
+                '''
+                git branch: 'master', credentialsId: 'Github_user_AlvarLegaz_token_as_pass', url: 'https://github.com/AlvarLegaz/todo-list-aws.git'
+            }
+        }
+        
+        stage('SAM-Deploy'){
+            steps{
+                sh '''
+                    sam build
+                    sam deploy --config-file samconfig.toml --config-env production --no-fail-on-empty-changeset
+                    sam list stack-outputs --output json --stack-name todo-list-aws-production --region us-east-1
+                '''
+            }
+        }
+        
+        stage('Rest Test'){
+            steps{
+                sh '''
+                pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
+                '''
+                junit 'result*.xml'
+            }   
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
