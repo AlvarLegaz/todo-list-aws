@@ -53,6 +53,10 @@ pipeline {
                     git checkout -b master origin/master
                     git branch
                     git checkout develop -- check_merge_to_master.txt
+                    git checkout develop -- src/.
+                    git commit -m "Promote to master"
+                    git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/AlvarLegaz/todo-list-aws.git
+                    git push origin master
                 '''
             }
         }
