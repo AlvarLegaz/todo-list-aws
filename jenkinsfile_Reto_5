@@ -2,6 +2,7 @@ pipeline {
     agent any
     stages {
         stage('Get Code') {
+            agent {label 'agente1'}
             steps {                
                 sh'''
                 uname
@@ -13,6 +14,7 @@ pipeline {
         }
         
         stage('Static Tests'){
+            agent {label 'agente1'}
             steps {
                 sh '''
                     flake8 --exit-zero --format=pylint --max-line-length 40 src > flake8.out
@@ -24,6 +26,7 @@ pipeline {
         }
         
         stage('SAM-Deploy'){
+            agent {label 'agente1'}
             steps{
                 sh '''
                     sam build
@@ -34,6 +37,7 @@ pipeline {
         }
         
         stage('Rest Test'){
+            agent {label 'agente1'}
             steps{
                 sh '''
                 pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
