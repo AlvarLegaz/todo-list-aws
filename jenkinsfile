@@ -60,13 +60,9 @@ pipeline {
                         git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/AlvarLegaz/todo-list-aws.git
                         git push origin master
                     '''
+                    cleanWs()
                 }
             }
-        }
-    }
-    post {
-        always {
-            cleanWs()
         }
     }
 }
