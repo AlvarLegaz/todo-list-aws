@@ -53,6 +53,7 @@ pipeline {
             steps{
                 withCredentials([usernamePassword(credentialsId: 'Github_user_AlvarLegaz_token_as_pass', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]){
                     sh '''
+                        git checkout develop
                         git branch
                     '''
                 }
