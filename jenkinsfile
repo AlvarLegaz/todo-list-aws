@@ -53,9 +53,6 @@ pipeline {
             steps{
                 withCredentials([usernamePassword(credentialsId: 'Github_user_AlvarLegaz_token_as_pass', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]){
                     sh '''
-                        git checkout -b master
-                        git pull origin master
-                        git merge develop -m "Promote to release"
                         git branch
                     '''
                 }
