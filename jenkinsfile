@@ -53,7 +53,6 @@ pipeline {
             steps{
                 withCredentials([usernamePassword(credentialsId: 'Github_user_AlvarLegaz_token_as_pass', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]){
                     sh '''
-                        git checkout master
                         git pull origin master
                         git merge develop -m "Promote to release"
                         git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/AlvarLegaz/todo-list-aws.git
