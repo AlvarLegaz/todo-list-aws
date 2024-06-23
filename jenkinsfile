@@ -56,12 +56,11 @@ pipeline {
                         git checkout develop
                         git branch
                         git checkout -b master
-                        git merge develop -m "Promote to release"
-                        cat test/integration/todoApiTest.py
-                        git checkout HEAD -- test/
-                        cat test/integration/todoApiTest.py
-                        git commit -m "Revert changes in test directory"
-
+                        git add ./src/.
+                        git add ./check_merge_to_master.txt
+                        git commit -m "Promote to release"
+                        git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/AlvarLegaz/todo-list-aws.git
+                        git push origin master
                     '''
                 }
             }
