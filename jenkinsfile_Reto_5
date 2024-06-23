@@ -49,9 +49,11 @@ pipeline {
         stage('Promote to production'){
             agent {label 'agente1'}
             steps{
-                git checkout -b master origin/master
-                git branch
-                git checkout develop -- check_merge_to_master.txt
+                sh '''
+                    git checkout -b master origin/master
+                    git branch
+                    git checkout develop -- check_merge_to_master.txt
+                '''
             }
         }
 
