@@ -1,11 +1,11 @@
 pipeline {
-    agent any
+    agent none
 
     stages {
         
         stage('Get Code') {
-            steps {
-                
+            agent {label 'agent1'}
+            steps {                
                 sh'''
                 uname
                 whoami
@@ -16,6 +16,7 @@ pipeline {
         }
         
         stage('Static Tests'){
+            agent {label 'agent1'}
             steps {
                 sh '''
                     flake8 --exit-zero --format=pylint --max-line-length 40 src > flake8.out
@@ -27,6 +28,7 @@ pipeline {
         }
         
         stage('SAM-Deploy'){
+            agent {label 'agent1'}
             steps{
                 sh '''
                     sam build
@@ -37,6 +39,7 @@ pipeline {
         }
         
         stage('Rest Test'){
+            agent {label 'agent1'}
             steps{
                 sh '''
                 pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
@@ -46,6 +49,7 @@ pipeline {
         }
         
         stage('Promote'){
+            agent {label 'agent1'}
             steps{
                 withCredentials([usernamePassword(credentialsId: 'Github_user_AlvarLegaz_token_as_pass', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]){
                     sh '''
