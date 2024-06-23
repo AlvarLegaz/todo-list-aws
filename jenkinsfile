@@ -56,9 +56,20 @@ pipeline {
                         git checkout develop
                         git branch
                         git checkout -b master
+                        git merge develop -m "Promote to release"
+                        cat test/integration/todoApiTest.py
+                        git checkout HEAD -- test/
+                        cat test/integration/todoApiTest.py
+                        git commit -m "Revert changes in test directory"
+
                     '''
                 }
             }
+        }
+    }
+    post {
+        always {
+            cleanWs()
         }
     }
 }
