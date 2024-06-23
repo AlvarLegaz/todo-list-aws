@@ -49,7 +49,7 @@ pipeline {
             agent {label 'agente1'}
             steps{
                 cleanWs()
-            {
+            }
         }
     }
 }
