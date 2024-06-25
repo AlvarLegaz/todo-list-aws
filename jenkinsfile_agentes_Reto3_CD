@@ -39,7 +39,7 @@ pipeline {
                 whoami
                 hostname
                 export BASE_URL_PROD=$(cat url_base.txt)   
-                echo $BASE_URL
+                echo $BASE_URL_PROD
                 pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
                 '''
                 junit 'result*.xml'
