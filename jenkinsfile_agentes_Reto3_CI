@@ -6,9 +6,8 @@ pipeline {
             agent {label 'agente1'}
             steps {                
                 sh'''
-                uname
                 whoami
-                pwd
+                hostname
                 '''
                 git branch: 'develop', credentialsId: 'Github_user_AlvarLegaz_token_as_pass', url: 'https://github.com/AlvarLegaz/todo-list-aws.git'
             }
@@ -18,6 +17,8 @@ pipeline {
             agent {label 'agente1'}
             steps {
                 sh '''
+                    whoami
+                    hostname
                     flake8 --exit-zero --format=pylint --max-line-length 40 src > flake8.out
                     bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
                 '''
@@ -30,6 +31,8 @@ pipeline {
             agent {label 'agente1'}
             steps{
                 sh '''
+                    whoami
+                    hostname
                     sam build
                     sam deploy --config-file samconfig.toml --config-env staging --no-fail-on-empty-changeset
                     api_urls_outputs=$(sam list stack-outputs --output json --stack-name staging-todo-list-aws --region us-east-1)
@@ -47,8 +50,8 @@ pipeline {
                 git branch: 'develop', url: 'https://github.com/AlvarLegaz/todo-list-aws.git'
                 unstash "url_base_stash_repo"
                 sh '''
-                uname
                 whoami
+                hostname
                 export BASE_URL=$(cat url_base.txt)   
                 echo $BASE_URL
                 pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
